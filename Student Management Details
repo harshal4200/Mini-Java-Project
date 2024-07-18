@@ -1,0 +1,284 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import com.Student.manage.Student;
+import com.Student.manage.StudentDao;
+
+public class StepOne {
+
+	public static void main(String[] args) throws IOException{
+		// TODO Auto-generated method stub
+		System.out.println("Wellcome! Nice to see you here.");
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		//Menu driven program (matlab jaise hi user enter karega use menus dikhe)
+		while(true) {
+			System.out.println("Press '1' to Add Student.");
+			System.out.println("Press' 2 to Delete Student.");
+			System.out.println("Press '3 to Display Student.");
+			System.out.println("Press '4' to Exit App.");
+			
+			System.out.println("Enter the number.");
+			int choise=Integer.parseInt(br.readLine());
+			
+			if(choise==1) {
+				//add student
+				System.out.print("Enter Student ID:" );
+				int StudentID=Integer.parseInt(br.readLine());
+				
+				System.out.print("Enter Student Name:  ");
+				String StudentName=br.readLine();
+								
+			System.out.println("Enter Student Age: ");
+			int StudentAge=Integer.parseInt(br.readLine());
+			
+		
+				System.out.println("Enter Student Phone NO.: ");
+				String StudentPhone=br.readLine();
+				
+				
+				System.out.println("Enter Student City: ");
+				String StudentCity=br.readLine();
+				
+							//Creater student object...
+				Student stu = new Student(StudentID,StudentName,StudentAge, StudentPhone,StudentCity);
+				boolean answer=StudentDao.insertStudentToDB(stu);
+				if(answer) {
+					System.out.println("Student is addeded successfully...");
+				}else {
+					System.out.println("Something went wrong try again...");
+				}
+				System.out.println(stu);
+				
+			}else if(choise==2) {
+				
+				//delete student
+				System.out.println("Enter student id to delete: ");
+				int userId=Integer.parseInt(br.readLine());
+				boolean f=StudentDao.deleteStudent(userId);
+				if(f) {
+					System.out.println("Deleted");
+				}else {
+					System.out.println("Something went wrong");
+				}
+			}else if(choise==3) {
+				
+				//display student
+		StudentDao.showAllStudent();
+			}else if(choise==4) {
+				
+				//exit app
+				break;
+			}else {
+				
+				//Invalid number
+			}
+		}
+		System.out.println("Are your sure you want to exit.");
+	}
+
+}
+
+public class Student {		
+	private int StudentId;
+		private  String StudentName;
+	private int StudentAge;
+		private String StudentPhone;
+		private String StudentCity;
+		public Student(int studentId, String studentName, int studentAge, String studentPhone, String studentCity) {
+			super();
+			StudentId = studentId;
+			StudentName = studentName;
+			StudentAge = studentAge;
+			StudentPhone = studentPhone;
+			StudentCity = studentCity;
+		}
+	
+		
+
+		public Student() {
+			super();
+			
+		}
+
+		public int getStudentId() {
+			return StudentId;
+		}
+
+		public void setStudentId(int studentId) {
+			StudentId = studentId;
+		}
+
+		public String getStudentName() {
+			return StudentName;
+		}
+
+		public void setStudentName(String studentName) {
+			StudentName = studentName;
+		}
+
+		public int getStudentAge() {
+			return StudentAge;
+		}
+
+		public void setStudentAge(int studentAge) {
+			StudentAge = studentAge;
+		}
+
+		public String getStudentPhone() {
+			return StudentPhone;
+		}
+
+		public void setStudentPhone(String studentPhone) {
+			StudentPhone = studentPhone;
+		}
+
+		public String getStudentCity() {
+			return StudentCity;
+		}
+
+		public void setStudentCity(String studentCity) {
+			StudentCity = studentCity;
+		}
+
+		@Override
+		public String toString() {
+			return "Student [StudentId=" + StudentId + ", StudentName=" + StudentName + ", StudentAge=" + StudentAge
+					+ ", StudentPhone=" + StudentPhone + ", StudentCity=" + StudentCity + "]";
+		}	
+		
+}
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class ConnectionP {
+	
+	//To store connection we make variable
+	static Connection con;
+
+		public static Connection createConnection() {
+		
+			//To setup connection follow steps
+			try {
+			//Step 1: Load the driver
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			
+			//Step 2: To set connection use DriverManager
+			String url="jdbc:mysql://localhost:3306/student_manage";
+			String user="root";
+			String password="Harshal12!@";
+			con=DriverManager.getConnection(url,user,password);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			return con;
+		}
+}
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class StudentDao {
+	
+		public static boolean  insertStudentToDB(Student stu) {
+		
+			boolean f=false;
+			try {
+				//jdbc code...
+			Connection con=ConnectionP.createConnection();
+			
+			
+	//Now fire a query																										//Dynamic,Parameterized query
+			String query="insert into students(ID,Name,Age,Phone,City) values(?,?,?,?,?)";
+			
+			//Use prepared statement to fire statement
+			PreparedStatement pstmt=con.prepareStatement(query);
+			
+		
+			//set the values of parameters
+			pstmt.setInt(1, stu.getStudentId());
+			pstmt.setString(2,stu.getStudentName());
+		pstmt.setInt(3, stu.getStudentAge());
+			pstmt.setString(4, stu.getStudentPhone());
+			pstmt.setString(5, stu.getStudentCity());
+			
+			//execute the query...
+			pstmt.executeUpdate();
+			f=true;
+			
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return f;
+		
+		}
+
+		public static boolean deleteStudent(int userId) {
+			
+			boolean f=false;
+			try {
+				//jdbc code...
+			Connection con=ConnectionP.createConnection();
+			
+			
+	//Now fire a query																										//Dynamic,Parameterized query
+			String query="delete from students where ID=?";
+			
+			//Use prepared statement to fire statement
+			PreparedStatement pstmt=con.prepareStatement(query);
+			
+		
+			//set the values of parameters
+			pstmt.setInt(1, userId);
+			
+			//execute the query...
+			pstmt.executeUpdate();
+			f=true;
+			
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return f;
+			}
+
+		public static void showAllStudent() {
+		
+			try {
+				//jdbc code...
+			Connection con=ConnectionP.createConnection();
+			
+			
+	//Now fire a query																										//Dynamic,Parameterized query
+			String query="select * from students";
+			
+			//Create a statement...
+			Statement stmt=con.createStatement();
+			
+			ResultSet set=stmt.executeQuery(query);
+		
+		while(set.next()) {
+		int id=set.getInt(1);
+			String name=set.getString(2);
+			int age=set.getInt(3);
+			String Phone=set.getString(4);
+			String City=set.getString(5);
+			
+		System.out.println("ID: "+id);
+			System.out.println("Name: "+name);
+			System.out.println("Age: "+age);
+			System.out.println("Phone: "+Phone);
+			System.out.println("City: "+City);
+			System.out.println("++++++++++++");
+		}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		
+		}
+
+		
+}
+
