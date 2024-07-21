@@ -155,7 +155,7 @@ public class  HotelManagementSystem {
             String query="update reservation" +
                     "set guest_name= '"+newGuestName+"'," +
                     "room_number= '"+newRoomNumber+"'," +
-                    "contact_number= '"+newContactNumber+"'," +
+                    "contact_number= '"+newContactNumber+"' " +
                     "where reservation_id= '"+reservation_id+"'";
 
             try (Statement stmt=con.createStatement()){
