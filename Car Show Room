@@ -1,0 +1,206 @@
+import java.util.*;
+
+public interface Utility {
+    public void get_details();
+    public void set_details();
+}
+public class Main {
+
+    public static void main_menu(){
+        System.out.println();
+        System.out.println("========================================= *** WELCOME TO SHOWROOM MANAGEMENT SYSTEM *** ==================================================");
+        System.out.println();
+        System.out.println("=================================================== *** ENTER YOUR CHOICE *** ============================================================");
+        System.out.println();
+        System.out.println("1].ADD SHOWROOMS \t\t\t 2].ADD EMPLOYEES \t\t\t 3].ADD CARS");
+        System.out.println("4].GET SHOWROOMS \t\t\t 5].GET EMPLOYEES \t\t\t 6].GET CARS");
+        System.out.println();
+    }
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        Showroom showroom[]=new Showroom[5];
+        Employee employee[]=new Employee[5];
+        Cars cars[]=new Cars[5];
+        int car_counter=0;
+        int showroom_counter=0;
+        int employee_counter=0;
+        int choice=100;
+        while(choice!=0){
+            main_menu();
+            choice=sc.nextInt();
+
+            while ((choice!=9 && choice!=0)){
+                switch (choice){
+                    case 1:
+                        showroom[showroom_counter]=new Showroom();
+                        showroom[showroom_counter].set_details();
+                        showroom_counter++;
+                        System.out.println();
+                        System.out.println("1].ADD NEW SHOWROOM");
+                        System.out.println("9].GO BACK TO MAIN MENU");
+                        choice=sc.nextInt();
+                    case 2:
+                        employee[employee_counter]=new Employee();
+                        employee[employee_counter].set_details();
+                        employee_counter++;
+                        System.out.println();
+                        System.out.println("2].ADD NEW EMPLOYEE");
+                        System.out.println("9].GO BACK TO MAIN MENU");
+                        choice=sc.nextInt();
+                        break;
+                    case 3:
+                        cars[car_counter]=new Cars();
+                        cars[car_counter].set_details();
+                        car_counter++;
+                        System.out.println();
+                        System.out.println("3].ADD NEW CAR");
+                        System.out.println("9].GO BACK TO MAIN MENU");
+                        choice=sc.nextInt();
+                        break;
+                    case 4:
+                        for (int i = 0; i < showroom_counter;i++){
+                            showroom[i].get_details();
+                            System.out.println();
+                            System.out.println();
+                        }
+                        System.out.println();
+                        System.out.println("9].GO BACK TO MAIN MENU");
+                        System.out.println("0].EXIT");
+                        choice=sc.nextInt();
+                        break;
+                    case 5:
+                        for(int i=0;i<employee_counter;i++){
+                            employee[i].get_details();
+                            System.out.println();
+                            System.out.println();
+                        }
+                        System.out.println();
+                        System.out.println("9].GO BACK TO MAIN MENU");
+                        System.out.println("0].EXIT");
+                        choice=sc.nextInt();
+                        break;
+                    case 6:
+                        for (int i=0;i<car_counter;i++){
+                            cars[i].get_details();
+                            System.out.println();
+                            System.out.println();
+                        }
+                        System.out.println();
+                        System.out.println("9].GO BACK TO MAIN MENU");
+                        System.out.println("0].EXIT");
+                        choice=sc.nextInt();
+                        break;
+                    default:
+                        System.out.println("ENTER VALID CHOICE: ");
+                        break;
+                }
+            }
+        }
+        }
+    }
+public class Showroom implements Utility{
+
+    String showroom_name;
+    String showroom_address;
+    int total_employees;
+    int total_cars_in_stock=0;
+    String manager_name;
+    @Override
+    public void get_details() {
+        System.out.println("Showroom Name: "+showroom_name);
+        System.out.println("Showroom Address: "+showroom_address);
+        System.out.println("Manager Name: "+manager_name);
+        System.out.println("Total Employees: "+total_employees);
+        System.out.println("Total Cars In Stock: "+total_cars_in_stock);
+    }
+
+    @Override
+    public void set_details() {
+        Scanner sc=new Scanner(System.in);
+        System.out.println("================================ *** ENTER SHOWROOM DETAILS *** =========================================");
+        System.out.println();
+        System.out.println("SHOWROOM NAME: ");
+        showroom_name=sc.nextLine();
+        System.out.println("SHOWROOM ADDRESS: ");
+        showroom_address=sc.nextLine();
+        System.out.println("MANAGER NAME: ");
+        manager_name=sc.nextLine();
+        System.out.println("TOTAL NO OF EMPLOYEES");
+        total_employees=sc.nextInt();
+        System.out.println("TOTAL CARS IN STOCK: ");
+        total_cars_in_stock=sc.nextInt();
+
+    }
+}
+import java.util.Scanner;
+import java.util.UUID;
+public class Employee extends Showroom implements Utility{
+    String empID;
+    String empName;
+    int empAge;
+    String empDepartment;
+
+    @Override
+    public void get_details() {
+        System.out.println("ID: "+empID);
+        System.out.println("Name: "+empName);
+        System.out.println("Age: "+empAge);
+        System.out.println("Dempartment: "+empDepartment);
+        System.out.println("Showroom Name: "+showroom_name);
+    }
+
+
+    @Override
+    public void set_details() {
+        Scanner sc=new Scanner(System.in);
+        UUID uid=UUID.randomUUID();
+        empID=String.valueOf(uid);
+        System.out.println("======================================== *** ENTER EMPLOYEE DETAILS *** ==================================");
+        System.out.println();
+        System.out.println("EMPLOYEE NAME: ");
+        empName=sc.nextLine();
+        System.out.println("EMPLOYEE AGE: ");
+        empAge=sc.nextInt();
+        System.out.println("EMPLOYEE DEPARTMENT: ");
+        empDepartment =sc.nextLine();
+        System.out.println("SHOWROOM NAME: ");
+        showroom_name=sc.nextLine();
+    }
+}
+public class Cars extends Showroom implements Utility{
+    String carName;
+    String carColor;
+    String carFuelType;
+    int carPrice;
+    String carType;
+    String carTransmission;
+
+    @Override
+    public void get_details() {
+        System.out.println("Name: "+carName);
+        System.out.println("Color: "+carColor);
+        System.out.println("Fuel Type: "+carFuelType);
+        System.out.println("Price: "+carPrice);
+        System.out.println("Car Type: "+carType);
+        System.out.println("Transmission: "+carTransmission);
+    }
+
+    @Override
+    public void set_details() {
+        Scanner sc=new Scanner(System.in);
+        System.out.print("CAR NAME: ");
+        carName=sc.nextLine();
+        System.out.print("CAR COLOR: ");
+        carColor=sc.nextLine();
+        System.out.print("FUEL TYPE: ");
+        carFuelType=sc.nextLine();
+        System.out.print("CAR PRICE: ");
+        carPrice=sc.nextInt();
+        System.out.print("CAR TYPE: ");
+        carType=sc.nextLine();
+        System.out.print("CAR TRANSMISSION: ");
+        carTransmission=sc.nextLine();
+        total_cars_in_stock++;
+
+    }
+}
