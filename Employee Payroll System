@@ -1,0 +1,93 @@
+abstract class Employee {
+		private String name;
+		private int id;
+		public Employee(String name, int id) {
+			this.name=name;
+			this.id=id;
+		
+		}
+		public String getName() {
+			return name;
+		}
+		public int getId() {
+			return id;
+		}
+		abstract double calculateSalary();
+		public String toString() {
+			return "Employee  [name="+name+",  id= "+id+",  salary=  "+calculateSalary()+" ]";
+			
+		}
+}
+public class FullTime extends Employee{
+		public double monthSalary;
+		public FullTime(String name,int id,double monthSalary) {
+			super(name,id);
+			this.monthSalary=monthSalary;
+		}
+		
+		public double calculateSalary() {
+			return monthSalary;
+		}
+}
+public class PartTime extends Employee{
+		private int hoursWorked;
+		private double hourlyRate;
+		
+		public PartTime(String name, int id, int hoursWorked,double hourlyRate) {
+			super(name,id);
+			this.hoursWorked=hoursWorked;
+			this.hourlyRate=hourlyRate;
+		}
+		public double calculateSalary() {
+			return hoursWorked*hourlyRate;
+		}
+}
+import java.util.ArrayList;
+
+public class PayrolSystem {
+	private ArrayList<Employee> employeeList;
+	public PayrolSystem() {
+		employeeList=new ArrayList<>();
+	}
+	public void addEmployee(Employee emp) {
+		employeeList.add(emp);
+	}
+	
+	public void removeEmployee(int id) {
+		Employee emptoRemove=null;
+		for(Employee emp : employeeList) {
+			if(emp.getId()==id) {
+				emptoRemove=emp;
+				break;
+			}
+		}
+		if(emptoRemove != null) {
+			employeeList.remove(emptoRemove);
+		}
+	}
+	public void displayEmployee() {
+		for(Employee emp : employeeList) {
+			System.out.println(emp);
+		}
+	}
+
+}
+public class Main {
+
+	public static void main(String[] args) {
+	
+		PayrolSystem payRoll=new PayrolSystem();
+		FullTime ft=new FullTime("Harshal",1,50000.00);
+		PartTime pt=new PartTime("Ajay",2,24,100);
+		
+		payRoll.addEmployee(ft);
+		payRoll.addEmployee(pt);
+		System.out.println("Initial Employee");
+		payRoll.displayEmployee();
+		System.out.println("Removing Employees");
+		payRoll.removeEmployee(2);
+		System.out.println("Remaing Employees");
+		payRoll.displayEmployee();
+	}
+
+}
